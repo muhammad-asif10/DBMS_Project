@@ -1,0 +1,143 @@
+-- Create the Students table
+CREATE TABLE Students(
+student_id SERIAL PRIMARY KEY,
+name VARCHAR(128),
+email VARCHAR(128),
+department VARCHAR(128),
+cgpa DECIMAL(3,2)
+);
+
+--Create the Course table
+CREATE TABLE Courses(
+course_id SERIAL PRIMARY KEY,
+course_name VARCHAR(128),
+credits INT,
+department varchar(128)
+);
+CREATE TABLE Enrollments(
+enrollment_id SERIAL PRIMARY KEY,
+student_id INT,
+course_id INT,
+grade VARCHAR(128),
+FOREIGN KEY(course_id)REFERENCES Courses(course_id)
+);
+
+--insert data into Students table
+INSERT INTO Students(name,email,department,cgpa)VALUES
+('Muhammad Asif','masif@gmail.com','Computer Science',2.8),
+('Shaziab','CR@gmail.com','Computer Science',3.6),
+('Abdul Rehman','abdulR@gmail.com','Cyber Sucerity',3.3),
+('Abu Haraira','huraira@gmail.com','Data Science',2.7),
+('Bilal','bila@gmail.com','Artificial Intelligence',3.5);
+
+--insert data into Courses table
+INSERT INTO Courses(course_name,credits,department)VALUES
+('Object Oriented Programming',4,'Computer Science'),
+('Database Management System',4,'Computer Science'),
+('Data Structure',3,'Data Science'),
+('Automating Things With AI',5,'Artificial Intelligence'),
+('Complex Threats',2,'Cyber Sucerity');
+
+--insert data into Enrollments table
+INSERT INTO Enrollments(student_id,course_id,grade)VALUES
+(1,1,'B'),
+(2,2,'A'),
+(3,3,'A'),
+(4,4,'B'),
+(5,5,'A');
+
+-- Reterive data From Students table
+SELECT *FROM Students;
+
+
+--UPDATE Query to upadte specific data
+UPDATE  Students
+SET cgpa = 3.7
+where student_id = 2;
+
+--DELETE Query
+DELETE FROM Enrollments
+WHERE enrollment_id = 5;
+
+--WHERE clause
+SELECT *FROM Students
+WHERE department = 'Computer Science';
+
+--AND, OR, NOT Operators
+--AND Operation
+SELECT *FROM Students
+WHERE department = 'Computer Science'
+AND cgpa>3.5;
+
+--OR Operation
+SELECT *FROM Students
+WHERE department = 'Computer Science' OR 
+department = 'Data Science';
+
+--NOT Operation
+SELECT *FROM Students
+WHERE department != 'Computer Science';
+
+--ORDER BY clause
+SELECT *FROM Students
+ORDER BY cgpa DESC;
+
+--GROUP BY cluase
+SELECT department,
+ROUND(AVG(cgpa), 2)AS
+average_cgpa
+FROM Students
+GROUP BY department;
+
+--HAVING clause
+SELECT department,AVG(CAST(cgpa AS float)) AS
+average_cgpa
+FROM Students
+GROUP BY department
+HAVING AVG(cgpa) >3.0;
+
+--Aggregate funtions
+SELECT COUNT(*)AS total_students FROM Students;
+SELECT ROUND(AVG(cgpa),3 )AS average_cgpa FROM Students;
+SELECT MAX(cgpa)AS max_cgpa FROM Students;
+SELECT MIN(cgpa)AS min_cgpa FROM Students;
+SELECT SUM(cgpa)AS sum_cgpa FROM Students;
+
+--INNER JOIN
+SELECT Students.name,
+Enrollments.course_id
+FROM Students
+INNER JOIN Enrollments
+ON Students.student_id = Enrollments.student_id;
+
+--LEFT JOIN
+SELECT Enrollments.course_id,Students.name
+FROM Students
+LEFT JOIN Enrollments
+ON Students.student_id = Enrollments.student_id;
+
+--RIGHT JOIN
+SELECT Enrollments.course_id,Students.name
+FROM Students
+RIGHT JOIN Enrollments
+ON Students.student_id = Enrollments.student_id;
+
+--FULL OUTER JOIN
+SELECT Enrollments.course_id,Students.name
+FROM Students
+FULL OUTER JOIN Enrollments
+ON Students.student_id = Enrollments.student_id;
+
+--INNER JOIN with multiple tables
+SELECT Enrollments.course_id,Students.name
+FROM Students
+LEFT JOIN Enrollments
+ON Students.student_id = Enrollments.student_id
+INNER JOIN Courses 
+ON Enrollments.course_id = Courses.course_id;
+
+
+--SELECT Queries of tables
+SELECT *FROM Students;
+SELECT *FROM Courses;
+SELECT *FROM Enrollments;
